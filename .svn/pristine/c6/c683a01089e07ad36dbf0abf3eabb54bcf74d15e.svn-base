@@ -1,0 +1,202 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>edmdb</groupId>
+  <artifactId>edmdb</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>edmdb</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+    
+  <!-- <dependencies>是项目引入插件所需要的额外依赖，主要是依赖的jar包 -->
+  <dependencies>
+  	
+  	<!-- junit单元测试 -->
+    <dependency>
+      <!-- 项目或者组织的唯一标志，并且配置时生成路径也是由此生成 -->  
+      <groupId>junit</groupId>
+      <!-- 项目的通用名称 --> 
+      <artifactId>junit</artifactId>
+      <!-- 项目的版本 -->
+      <version>4.12</version>
+      <!-- 表示开发的时候引入，发布的时候不会加载此包，其他的还有compile(缺省值)、provided、runtime、system -->
+      <scope>test</scope>
+    </dependency>
+  
+  	<!-- 日志文件管理包 -->
+    <!-- log start -->
+    <!-- 
+    	Commons Logging (JCL)提供的是一个日志(Log)接口(interface)，
+    	同时兼顾轻量级和不依赖于具体的日志实现工具。
+    	它提供给中间件/日志工具开发者一个简单的日志操作抽象，允许程序开发人员使用不同的具体日志实现工具 
+    -->
+   	<dependency>
+    	<groupId>commons-logging</groupId>
+    	<artifactId>commons-logging</artifactId>
+    	<version>1.1.1</version>
+	</dependency>
+	<!-- 
+		Apache的一个开放源代码项目，通过使用Log4j，
+		我们可以控制日志信息输送的目的地是控制台、文件、GUI组件、甚至是套接口服务 器、
+		NT的事件记录器、UNIX Syslog守护进程等；用户也可以控制每一条日志的输出格式；
+		通过定义每一条日志信息的级别，用户能够更加细致地控制日志的生成过程 
+	-->
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.17</version>
+    </dependency>
+    <!-- slf4j全称为Simple Logging Facade for JAVA，java简单日志门面 -->
+    <dependency>
+	  	<groupId>org.slf4j</groupId>
+	  	<artifactId>slf4j-api</artifactId>
+	  	<version>1.6.0</version>
+	</dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.7.7</version>
+    </dependency>
+    <!-- 使用Log4jdbc-log4j2监听MyBatis中运行的SQL和Connection --> 
+    <dependency>
+  		<groupId>net.sf.log4jdbc</groupId>
+  		<artifactId>log4jdbc4</artifactId>
+  		<version>1.2.1</version>
+	</dependency>
+	
+	
+    <!-- log end -->
+    
+    <!-- spring -->
+    <!-- spring的核心工具包 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-core</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	<!-- springIoC(依赖注入)的基础实现 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-beans</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	<!-- 
+		这个jar文件包含在应用中使用Spring的AOP特性时所需的类。
+		使用基于AOP的Spring特性，如声明型事务管理（Declarative Transaction Management），
+		也要在应用里包含这个jar包 -->
+	
+	<!-- 
+		spring提供在基础IoC功能上的扩展服务，此外还提供许多企业级服务的支持，
+		如邮件服务、任务调度、JNDI定位、EJB集成、远程访问、缓存、
+		UI方面的用来与模板（Templating）引擎如Velocity、FreeMarker、
+		JasperReports集成的类以及校验Validation方面的相关类
+    -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	
+	<!-- Spring DAO层 -->
+	<!-- 对JDBC的简单封装 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-jdbc</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	<!-- 用aop:config声明要进行事务增强的切面,用tx:advice声明具体方法的事务属性,及应用到的事务管理器 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-tx</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	
+	<!-- Spring web -->
+	<!-- SpringWeb下的工具包 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-web</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	<!-- 包含Spring MVC 框架相关的所有类。包括框架的Servlets，Web MVC框架，控制器和视图支持 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	
+	<!-- spring提供对框架的整合 -->
+	<!-- 
+    	spring提供对AspectJ框架的整合，以便可以方便的将面向方面的功能集成进IDE中，比如Eclipse AJDT。
+		外部依赖。
+	-->
+    <dependency>  
+        <groupId>org.springframework</groupId>  
+        <artifactId>spring-aspects</artifactId>  
+        <version>4.1.7.RELEASE</version>
+    </dependency>  
+    
+    <!-- Perf4J是一款开源工具包，用于添加Java服务器端计时代码、记录日志和监控结果。 -->
+    <dependency>  
+        <groupId>org.perf4j</groupId>  
+        <artifactId>perf4j</artifactId>  
+        <version>0.9.16</version>  
+   	</dependency> 
+   	<!-- AspectJ框架 --> 
+    <dependency>  
+        <groupId>aspectj</groupId>  
+        <artifactId>aspectjrt</artifactId>  
+        <version>1.5.3</version>
+    </dependency>  
+	
+	<!-- spring测试 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>4.1.7.RELEASE</version>
+	</dependency>
+	
+    <!-- mybatis核心包 -->
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+		<version>3.1.1</version>
+	</dependency>
+	
+	<!-- mybatis-spring包 -->
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+		<version>1.2.2</version>
+	</dependency>
+	
+	<!-- mybatis分页插件依赖 -->
+	<dependency>
+	    <groupId>com.github.pagehelper</groupId>
+	    <artifactId>pagehelper</artifactId>
+	    <version>4.0.0</version>
+	</dependency>
+	
+	<!-- database -->
+	<!-- 导入MySQL数据库连接jar包 -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.21</version>
+	</dependency>
+	<!-- 导入dbcp的jar包，用来在applicationContext-dao.xml中配置数据库 -->
+	<dependency>
+		<groupId>commons-dbcp</groupId>
+		<artifactId>commons-dbcp</artifactId>
+		<version>1.4</version>
+	</dependency>
+       
+  </dependencies>
+
+</project>

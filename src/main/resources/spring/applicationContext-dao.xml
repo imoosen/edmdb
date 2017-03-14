@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+	<!-- 开启注解扫描 -->
+	<context:annotation-config />
+	<context:component-scan base-package="com.fiveone.*" />  
+	<!-- jdbc.properties文件路径 -->
+	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true" />
+
+	<!-- 系统日志初始化配置类  -->
+	<bean id="log4jInitialization"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetClass" value="org.springframework.util.Log4jConfigurer" />
+		<property name="targetMethod" value="initLogging" />
+		<property name="arguments">
+			<list>
+				<value>classpath:log4j.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 数据库日志初始化配置类  -->
+	<bean id="log4jdbcInterceptor" class="net.sf.log4jdbc.DataSourceSpyInterceptor" />
+	<bean id="dataSourceLog4jdbcAutoProxyCreator"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="interceptorNames">
+			<list>
+				<value>log4jdbcInterceptor</value>
+			</list>
+		</property>
+		<property name="beanNames">
+			<list>
+				<value>dataSource</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 数据源的配置 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="1" />
+		<property name="maxActive" value="2" />
+		<property name="maxIdle" value="2" />
+		<property name="minIdle" value="1" />
+
+	    <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="180"/>
+        <property name="maxWait" value="60000"/>
+        <property name="validationQuery" value="SELECT 1" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testWhileIdle" value="true" />
+		<property name="numTestsPerEvictionRun" value="8"/>
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="minEvictableIdleTimeMillis" value="3600000" />
+	</bean>
+
+	<!-- MyBatis sqlSessionFactory 配置 mybatis　-->
+	<bean name="sqlSessionFactory" id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+	<!-- 基于接口方式 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="com.fiveone.service"></property>
+		<property name="annotationClass" value="org.springframework.stereotype.Repository"></property>
+	</bean>
+	<!-- 事务控制 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="globalRollbackOnParticipationFailure" value="false"></property>
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="save*" read-only="true" />
+			<tx:method name="update*" read-only="true" />
+			<tx:method name="view*" read-only="true" />
+			<tx:method name="show*" read-only="true" />
+			<tx:method name="del*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+			<tx:method name="remove*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+			<tx:method name="update*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+			<tx:method name="modfiy*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+			<tx:method name="add*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+			<tx:method name="create*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+			<tx:method name="insert*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+			<tx:method name="*" read-only="false" rollback-for="Exception"
+				propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="serviceOperation"
+			expression="execution(* com.fiveone.edm..service..*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />
+	</aop:config> 
+</beans>

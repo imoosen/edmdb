@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emailSenderMapper" >
+  <resultMap id="emailSenderMap" type="emailSender" >
+    <id column="f_id" property="id" jdbcType="INTEGER" />
+    <result column="f_email_sender_address" property="emailSenderAddress" jdbcType="VARCHAR" />
+    <result column="f_password" property="password" jdbcType="VARCHAR" />
+    <result column="f_email_sender_state" property="emailSenderState" jdbcType="INTEGER" />
+    <result column="f_create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="f_update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    f_id,f_email_sender_address,f_password,f_email_sender_state,f_create_date,f_update_date
+  </sql>
+  
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="emailSenderMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_email_sender where f_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询所有 -->
+  <select id="queryAll" resultMap="emailSenderMap">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_sender where 1 = 1
+  </select>
+  
+  <!-- 分页查询所有 -->
+  <select id="queryAllByPage" resultMap="emailSenderMap" parameterType="java.util.Map">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_sender limit #{startIndex},#{pageSize}
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="queryTotalCount" resultMap="emailSenderMap"> 
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_sender where 1 = 1 
+  </select> 
+  
+  <!-- 根据id删除 -->
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from t_email_sender where f_id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 插入邮箱发件人信息-->
+  <insert id="save" parameterType="emailSender" >
+    insert into t_email_sender
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        f_id,
+      </if>
+      <if test="emailSenderAddress != null" >
+        f_email_sender_address,
+      </if>
+      <if test="password != null" >
+        f_password,
+      </if>
+      <if test="emailSenderState != null" >
+        f_email_sender_state,
+      </if>
+      <if test="createDate != null" >
+        f_create_date,
+      </if>
+      <if test="updateDate != null" >
+        f_update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="emailSenderAddress != null" >
+        #{emailSenderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="emailSenderState != null" >
+        #{emailSenderState,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 修改邮箱发件人信息 -->
+  <update id="update" parameterType="emailSender" >
+    update t_email_sender
+    <set >
+      <if test="id != null" >
+        f_id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="emailSenderAddress != null" >
+        f_email_sender_address = #{emailSenderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        f_password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="emailSenderState != null" >
+        f_email_sender_state = #{emailSenderState,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        f_create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        f_update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where f_id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

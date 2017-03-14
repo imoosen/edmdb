@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emailLogsMapper" >
+  <resultMap id="emailLogsMap" type="emailLogs" >
+    <id column="f_id" property="id" jdbcType="INTEGER" />
+    <result column="f_email_id" property="emailId" jdbcType="INTEGER" />
+    <result column="f_is_send" property="isSend" jdbcType="INTEGER" />
+    <result column="f_is_open" property="isOpen" jdbcType="INTEGER" />
+    <result column="f_is_read" property="isRead" jdbcType="INTEGER" />
+    <result column="f_msg_send" property="msgSend" jdbcType="VARCHAR" />
+    <result column="f_msg_read" property="msgRead" jdbcType="VARCHAR" />
+    <result column="f_send_date" property="sendDate" jdbcType="TIMESTAMP" />
+    <result column="f_open_date" property="openDate" jdbcType="TIMESTAMP" />
+    <result column="f_read_date" property="readDate" jdbcType="TIMESTAMP" />
+    <result column="f_server_id" property="serverId" jdbcType="INTEGER" />
+    <result column="f_ip" property="ip" jdbcType="VARCHAR" />
+    <result column="f_email_sender_id" property="emailSenderId" jdbcType="INTEGER" />
+    <result column="f_area" property="area" jdbcType="VARCHAR" />
+    <result column="f_state_id" property="stateId" jdbcType="INTEGER" />
+    <result column="f_create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="f_update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <!-- 引入emailMapper.xml文件 -->
+    <association property="email" resultMap="emailMapper.emailMap"/>  
+    <!-- 引入emailSenderMapper.xml文件 -->
+    <association property="emailSender" resultMap="emailSenderMapper.emailSenderMap"/>  
+	<!-- 引入emailStateMapper.xml文件 -->
+    <association property="emailState" resultMap="emailStateMapper.emailStateMap"/>  
+  </resultMap>
+  
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="emailLogsMap" parameterType="java.lang.Integer" >
+   		select t1.f_id,t2.f_email_address,t1.f_is_send,t1.f_is_open,t1.f_is_read,
+  		t1.f_msg_send,t1.f_msg_read,t1.f_send_date,t1.f_open_date,t1.f_read_date,
+  		t1.f_server_id,t1.f_ip,t1.f_email_sender_id,t1.f_area,t1.f_create_date,t1.f_update_date,
+  		t3.f_email_sender_address,t4.f_state_no,t4.f_state_content 
+  		from t_email_logs t1 
+  		left join t_email t2 on t2.f_id = t1.f_email_id 
+   		left join t_email_sender t3 on t1.f_email_sender_id = t3.f_id
+   		left join t_email_state t4 on t1.f_state_id = t4.f_id 
+   		where t1.f_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询所有 -->
+  <select id="queryAll" resultMap="emailLogsMap">
+  		select t1.f_id,t2.f_email_address,t1.f_is_send,t1.f_is_open,t1.f_is_read,
+  		t1.f_msg_send,t1.f_msg_read,t1.f_send_date,t1.f_open_date,t1.f_read_date,
+  		t1.f_server_id,t1.f_ip,t1.f_email_sender_id,t1.f_area,t1.f_create_date,t1.f_update_date,
+  		t3.f_email_sender_address,t4.f_state_no,t4.f_state_content 
+  		from t_email_logs t1 
+  		left join t_email t2 on t2.f_id = t1.f_email_id 
+   		left join t_email_sender t3 on t1.f_email_sender_id = t3.f_id
+   		left join t_email_state t4 on t1.f_state_id = t4.f_id where 1 = 1
+  </select>
+  
+  <!-- 分页查询所有 -->
+  <select id="queryAllByPage" resultMap="emailLogsMap" parameterType="java.util.Map" >
+  		select t1.f_id,t2.f_email_address,t1.f_is_send,t1.f_is_open,t1.f_is_read,
+  		t1.f_msg_send,t1.f_msg_read,t1.f_send_date,t1.f_open_date,t1.f_read_date,
+  		t1.f_server_id,t1.f_ip,t1.f_email_sender_id,t1.f_area,t1.f_create_date,t1.f_update_date,
+  		t3.f_email_sender_address,t4.f_state_no,t4.f_state_content  
+  		from 
+  		(select * from t_email_logs limit #{startIndex},#{pageSize})t1 
+  		left join t_email t2 on t2.f_id = t1.f_email_id
+  		left join t_email_sender t3 on t1.f_email_sender_id = t3.f_id 
+  		left join t_email_state t4 on t1.f_state_id = t4.f_id
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="queryTotalCount" resultMap="emailLogsMap">  
+		select * from t_email_logs where 1 = 1 
+  </select>  
+  
+  <!-- 根据id删除 -->
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from t_email_logs where f_id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="save" parameterType="emailLogs" >
+    insert into t_email_logs
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        f_id,
+      </if>
+      <if test="emailId != null" >
+        f_email_id,
+      </if>
+      <if test="isSend != null" >
+        f_is_send,
+      </if>
+      <if test="isOpen != null" >
+        f_is_open,
+      </if>
+      <if test="isRead != null" >
+        f_is_read,
+      </if>
+      <if test="msgSend != null" >
+        f_msg_send,
+      </if>
+      <if test="msgRead != null" >
+        f_msg_read,
+      </if>
+      <if test="sendDate != null" >
+        f_send_date,
+      </if>
+      <if test="openDate != null" >
+        f_open_date,
+      </if>
+      <if test="readDate != null" >
+        f_read_date,
+      </if>
+      <if test="serverId != null" >
+        f_server_id,
+      </if>
+      <if test="ip != null" >
+        f_ip,
+      </if>
+      <if test="emailSenderId != null" >
+        f_email_sender_id,
+      </if>
+      <if test="area != null" >
+        f_area,
+      </if>
+      <if test="stateId != null" >
+        f_state_id,
+      </if>
+      <if test="createDate != null" >
+        f_create_date,
+      </if>
+      <if test="updateDate != null" >
+        f_update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="emailId != null" >
+        #{emailId,jdbcType=INTEGER},
+      </if>
+      <if test="isSend != null" >
+        #{isSend,jdbcType=INTEGER},
+      </if>
+      <if test="isOpen != null" >
+        #{isOpen,jdbcType=INTEGER},
+      </if>
+      <if test="isRead != null" >
+        #{isRead,jdbcType=INTEGER},
+      </if>
+      <if test="msgSend != null" >
+        #{msgSend,jdbcType=VARCHAR},
+      </if>
+      <if test="msgRead != null" >
+        #{msgRead,jdbcType=VARCHAR},
+      </if>
+      <if test="sendDate != null" >
+        #{sendDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="openDate != null" >
+        #{openDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readDate != null" >
+        #{readDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serverId != null" >
+        #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="emailSenderId != null" >
+        #{emailSenderId,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="stateId != null" >
+        #{stateId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="emailLogs" >
+    update t_email_logs
+    <set >
+      <if test="id != null" >
+        f_id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="emailId != null" >
+        f_email_id = #{emailId,jdbcType=INTEGER},
+      </if>
+      <if test="isSend != null" >
+        f_is_send = #{isSend,jdbcType=INTEGER},
+      </if>
+      <if test="isOpen != null" >
+        f_is_open = #{isOpen,jdbcType=INTEGER},
+      </if>
+      <if test="isRead != null" >
+        f_is_read = #{isRead,jdbcType=INTEGER},
+      </if>
+      <if test="msgSend != null" >
+        f_msg_send = #{msgSend,jdbcType=VARCHAR},
+      </if>
+      <if test="msgRead != null" >
+        f_msg_read = #{msgRead,jdbcType=VARCHAR},
+      </if>
+      <if test="sendDate != null" >
+        f_send_date = #{sendDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="openDate != null" >
+        f_open_date = #{openDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readDate != null" >
+        f_read_date = #{readDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serverId != null" >
+        f_server_id = #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        f_ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="emailSenderId != null" >
+        f_email_sender_id = #{emailSenderId,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        f_area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="stateId != null" >
+        f_state_id = #{stateId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        f_create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        f_update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where f_id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

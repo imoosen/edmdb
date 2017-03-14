@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emailProjectMapper" >
+  <resultMap id="emailProjectMap" type="emailProject" >
+    <id column="f_id" property="id" jdbcType="INTEGER" />
+    <result column="f_project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="f_email_sender_id" property="emailSenderId" jdbcType="INTEGER" />
+    <result column="f_content_id" property="contentId" jdbcType="INTEGER" />
+    <result column="f_plan_send" property="planSend" jdbcType="INTEGER" />
+    <result column="f_send_num" property="sendNum" jdbcType="INTEGER" />
+    <result column="f_active_flag" property="activeFlag" jdbcType="INTEGER" />
+    <result column="f_create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="f_update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="f_project_state" property="projectState" jdbcType="INTEGER" />
+    <!-- 引入emailSenderMapper.xml文件 -->
+    <association property="emailSender" resultMap="emailSenderMapper.emailSenderMap"/>  
+ 	<!-- 引入emailContentMapper.xml文件 -->
+    <association property="emailContent" resultMap="emailContentMapper.emailContentMap"/> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    f_id,f_project_name,f_email_sender_id,f_content_id,f_plan_send,f_send_num,f_active_flag,f_create_date,f_update_date,f_project_state
+  </sql>
+  
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="emailProjectMap" parameterType="java.lang.Integer" >
+    select t1.f_id,t1.f_project_name,t2.f_email_sender_address,t2.f_password,
+    t3.f_email_title, t3.f_content,t1.f_plan_send,t1.f_send_num,t1.f_active_flag,
+    t1.f_create_date,t1.f_update_date,t1.f_project_state
+    from t_email_project t1 
+    left join t_email_sender t2 on t1.f_email_sender_id = t2.f_id
+    left join t_email_content t3 on t1.f_content_id = t3.f_id
+    where t1.f_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询所有 -->
+  <select id="queryAll" resultMap="emailProjectMap">
+  	select t1.f_id,t1.f_project_name,t2.f_email_sender_address,t2.f_password,
+    t3.f_email_title, t3.f_content,t1.f_plan_send,t1.f_send_num,t1.f_active_flag,
+    t1.f_create_date,t1.f_update_date,t1.f_project_state
+    from t_email_project t1 
+    left join t_email_sender t2 on t1.f_email_sender_id = t2.f_id
+    left join t_email_content t3 on t1.f_content_id = t3.f_id
+  	where 1 = 1
+  </select>
+  
+  <!-- 分页查询所有 -->
+  <select id="queryAllByPage" resultMap="emailProjectMap" parameterType="java.util.Map">
+  	select t1.f_id,t1.f_project_name,t2.f_email_sender_address,t2.f_password,
+    t3.f_email_title, t3.f_content,t1.f_plan_send,t1.f_send_num,t1.f_active_flag,
+    t1.f_create_date,t1.f_update_date,t1.f_project_state
+    from
+  	(select * from t_email_project limit #{startIndex},#{pageSize})t1
+  	left join t_email_sender t2 on t1.f_email_sender_id = t2.f_id
+    left join t_email_content t3 on t1.f_content_id = t3.f_id
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="queryTotalCount" resultMap="emailProjectMap"> 
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_project where 1 = 1 
+  </select> 
+  
+  <!-- 根据id删除 -->
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from t_email_project where f_id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 插入邮箱内容 -->
+  <insert id="save" parameterType="emailProject" >
+    insert into t_email_project
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        f_id,
+      </if>
+      <if test="projectName != null" >
+        f_project_name,
+      </if>
+      <if test="emailSenderId != null" >
+        f_email_sender_id,
+      </if>
+      <if test="contentId != null" >
+        f_content_id,
+      </if>
+      <if test="planSend != null" >
+        f_plan_send,
+      </if>
+      <if test="sendNum != null" >
+        f_send_num,
+      </if>
+      <if test="activeFlag != null" >
+        f_active_flag,
+      </if>
+      <if test="createDate != null" >
+        f_create_date,
+      </if>
+      <if test="updateDate != null" >
+        f_update_date,
+      </if>
+      <if test="projectState != null" >
+        f_project_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="emailSenderId != null" >
+        #{emailSenderId,jdbcType=INTEGER},
+      </if>
+      <if test="contentId != null" >
+        #{contentId,jdbcType=INTEGER},
+      </if>
+      <if test="planSend != null" >
+        #{planSend,jdbcType=INTEGER},
+      </if>
+      <if test="sendNum != null" >
+        #{sendNum,jdbcType=INTEGER},
+      </if>
+      <if test="activeFlag != null" >
+        #{activeFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectState != null" >
+        #{projectState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 修改邮箱内容 -->
+  <update id="update" parameterType="emailProject" >
+    update t_email_project
+    <set >
+      <if test="id != null" >
+        f_id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectName != null" >
+        f_project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="emailSenderId != null" >
+        f_email_sender_id = #{emailSenderId,jdbcType=INTEGER},
+      </if>
+      <if test="contentId != null" >
+        f_content_id = #{contentId,jdbcType=INTEGER},
+      </if>
+      <if test="planSend != null" >
+        f_plan_send = #{planSend,jdbcType=INTEGER},
+      </if>
+      <if test="sendNum != null" >
+        f_send_num = #{sendNum,jdbcType=INTEGER},
+      </if>
+      <if test="activeFlag != null" >
+        f_active_flag = #{activeFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        f_create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        f_update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectState != null" >
+        f_project_state = #{projectState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where f_id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

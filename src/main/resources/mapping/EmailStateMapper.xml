@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emailStateMapper" >
+  <resultMap id="emailStateMap" type="emailState" >
+    <id column="f_id" property="id" jdbcType="INTEGER" />
+    <result column="f_state_no" property="stateNo" jdbcType="INTEGER" />
+    <result column="f_state_content" property="stateContent" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    f_id,f_state_no,f_state_content
+  </sql>
+  
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="emailStateMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_email_state where f_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据邮箱状态编号查询 -->
+  <select id="queryByEmailStateNo" resultMap="emailStateMap">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_state where f_state_no = #{stateNo,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据邮箱状态编号和状态内容查询 -->
+  <select id="queryByWhere" resultMap="emailStateMap" parameterType="java.util.Map">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_state
+  		<where> 
+	  		<if test="stateNo != null" >
+	        	and f_state_no = #{stateNo,jdbcType=INTEGER} 
+	      	</if>
+	      	<if test="stateContent != null" >
+	        	and f_state_content = #{stateContent,jdbcType=VARCHAR}
+	      	</if>
+      	</where>
+  </select>
+  
+  <!-- 查询所有 -->
+  <select id="queryAll" resultMap="emailStateMap">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_state where 1 = 1
+  </select>
+  
+  <!-- 分页查询所有 -->
+  <select id="queryAllByPage" resultMap="emailStateMap" parameterType="java.util.Map" >
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_state limit #{startIndex},#{pageSize}
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="queryTotalCount" resultMap="emailStateMap"> 
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email_state where 1 = 1 
+  </select> 
+  
+  <!-- 根据id删除 -->
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from t_email_state where f_id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 插入邮箱状态信息 -->
+  <insert id="save" parameterType="emailState" >
+    insert into t_email_state
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        f_id,
+      </if>
+      <if test="stateNo != null" >
+        f_state_no,
+      </if>
+      <if test="stateContent != null" >
+        f_state_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stateNo != null" >
+        #{stateNo,jdbcType=INTEGER},
+      </if>
+      <if test="stateContent != null" >
+        #{stateContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="emailState" >
+    update t_email_state
+    <set >
+      <if test="id != null" >
+        f_id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stateNo != null" >
+        f_state_no = #{stateNo,jdbcType=INTEGER},
+      </if>
+      <if test="stateContent != null" >
+        f_state_content = #{stateContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where f_id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

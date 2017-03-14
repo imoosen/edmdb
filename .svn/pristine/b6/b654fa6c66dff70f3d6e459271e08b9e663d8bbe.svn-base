@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<!-- 配置数据库方言  目前只有mysql和oracle两种-->  
+		<property name="dialect" value="mysql" />
+	</properties>
+
+    <settings>
+    	<!-- 使用jdbc的getGeneratedKeys获取数据库自增主键值 -->
+		<setting name="useGeneratedKeys" value="true" />
+
+		<!-- 使用列别名替换列名 默认:true -->
+		<setting name="useColumnLabel" value="true" />
+
+		<!-- 开启驼峰命名转换:Table{create_time} -> Entity{createTime} -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        
+        <!-- 启用或禁用 缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		
+		<!-- 启用或禁用延迟加载。当禁用时, 所有关联对象都会即时加载 -->
+		<!-- <setting name="lazyLoadingEnabled" value="true" />   -->
+    </settings>
+
+	<!-- 
+		设置别名
+		通过一个简单的别名来表示一个冗长的类型，这样可以降低复杂度。
+   		类型别名标签typeAliases中可以包含多个typeAlias 
+   	-->
+	<typeAliases>
+		<typeAlias alias="email" type="com.fiveone.edm.database.entity.Email" />
+		<typeAlias alias="emailContent" type="com.fiveone.edm.database.entity.EmailContent" />
+		<typeAlias alias="emailLogs" type="com.fiveone.edm.database.entity.EmailLogs" />
+		<typeAlias alias="emailState" type="com.fiveone.edm.database.entity.EmailState" />
+		<typeAlias alias="emailSender" type="com.fiveone.edm.database.entity.EmailSender" />
+		<typeAlias alias="emailProject" type="com.fiveone.edm.database.entity.EmailProject" />
+	</typeAliases>
+
+	<!-- 引入映射文件 --> 
+	<mappers>
+		<!-- start base config -->
+		<mapper resource="mapping/EmailMapper.xml" />
+		<mapper resource="mapping/EmailContentMapper.xml" />
+		<mapper resource="mapping/EmailLogsMapper.xml" />
+		<mapper resource="mapping/EmailStateMapper.xml" />
+		<mapper resource="mapping/EmailSenderMapper.xml" />
+		<mapper resource="mapping/EmailProjectMapper.xml" />
+	</mappers>
+</configuration>

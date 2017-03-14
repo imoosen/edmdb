@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emailMapper" >
+  <resultMap id="emailMap" type="email" >
+    <id column="f_id" property="id" jdbcType="INTEGER" />
+    <result column="f_email_address" property="emailAddress" jdbcType="VARCHAR" />
+    <result column="f_email_type" property="emailType" jdbcType="VARCHAR" />
+    <result column="f_data_is_valid" property="dataIsValid" jdbcType="INTEGER" />
+    <result column="f_email_is_subscribe" property="emailIsSubscribe" jdbcType="INTEGER" />
+    <result column="f_province" property="province" jdbcType="VARCHAR" />
+    <result column="f_city" property="city" jdbcType="VARCHAR" />
+    <result column="f_source" property="source" jdbcType="VARCHAR" />
+    <result column="f_email_state" property="emailState" jdbcType="INTEGER" />
+    <result column="f_create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="f_update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    f_id,f_email_address,f_email_type,f_data_is_valid,f_email_is_subscribe,f_province,f_city,f_source,f_email_state,f_create_date,f_update_date
+  </sql>
+  
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="emailMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_email where f_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据邮箱类型查询 -->
+  <select id="queryByEmailType" resultMap="emailMap" parameterType="java.lang.String">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email where f_email_type like #{emailType,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据邮箱地址查询 -->
+  <select id="queryByEmailAddress" resultMap="emailMap" parameterType="java.util.Map" statementType="STATEMENT" >
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from ${table} where f_email_address = '${emailAddress}' limit 0,1
+  </select>
+  
+  <!-- 查询所有 -->
+  <select id="queryAll" resultMap="emailMap">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email where 1 = 1
+  </select>
+  
+  <!-- 分页查询所有 -->
+  <select id="queryAllByPage" resultMap="emailMap" parameterType="java.util.Map">
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email limit #{startIndex},#{pageSize}
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="queryTotalCount" resultMap="emailMap"> 
+  		select 
+  		<include refid="Base_Column_List" /> 
+  		from t_email where 1 = 1 
+  </select> 
+  
+  <!-- 根据id删除 -->
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from t_email where f_id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 插入数据 -->
+  <insert id="save" parameterType="email" >
+    insert into t_email
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        f_id,
+      </if>
+      <if test="emailAddress != null" >
+        f_email_address,
+      </if>
+      <if test="emailType != null" >
+        f_email_type,
+      </if>
+      <if test="dataIsValid != null" >
+        f_data_is_valid,
+      </if>
+      <if test="emailIsSubscibe != null" >
+        f_email_is_subscibe,
+      </if>
+      <if test="province != null" >
+        f_province,
+      </if>
+      <if test="city != null" >
+        f_city,
+      </if>
+      <if test="source != null" >
+        f_source,
+      </if>
+      <if test="emailState != null" >
+        f_email_state,
+      </if>
+      <if test="createDate != null" >
+        f_create_date,
+      </if>
+      <if test="updateDate != null" >
+        f_update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="emailAddress != null" >
+        #{emailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="emailType != null" >
+        #{emailType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataIsValid != null" >
+        #{dataIsValid,jdbcType=INTEGER},
+      </if>
+      <if test="emailIsSubscibe != null" >
+        #{emailIsSubscibe,jdbcType=INTEGER},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="emailState != null" >
+        #{emailState,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 修改数据 -->
+  <update id="update" parameterType="email" >
+    update t_email
+    <set >
+      <if test="id != null" >
+        f_id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="emailAddress != null" >
+        f_email_address = #{emailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="emailType != null" >
+        f_email_type = #{emailType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataIsValid != null" >
+        f_data_is_valid = #{dataIsValid,jdbcType=INTEGER},
+      </if>
+      <if test="emailIsSubscibe != null" >
+        f_email_is_subscibe = #{emailIsSubscibe,jdbcType=INTEGER},
+      </if>
+      <if test="province != null" >
+        f_province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        f_city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        f_source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="emailState != null" >
+        f_email_state = #{emailState,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        f_create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        f_update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where f_id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
