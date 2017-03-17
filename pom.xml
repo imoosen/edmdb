@@ -77,6 +77,13 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>1.7.7</version>
     </dependency>
+    <!-- 使用Log4jdbc-log4j2监听MyBatis中运行的SQL和Connection -->
+    <dependency>
+  		<groupId>net.sf.log4jdbc</groupId>
+  		<artifactId>log4jdbc4</artifactId>
+  		<version>1.2.1</version>
+	</dependency>
+    <!-- log end -->
 
     <!-- spring -->
     <!-- spring的核心工具包 -->
