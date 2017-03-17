@@ -1,8 +1,0 @@
-#jdbc settings
-jdbc.driverClassName=com.mysql.jdbc.Driver
-#jdbc.url=jdbc:mysql://printserver:3306/emaildb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&noAccessToProcedureBodies=true
-jdbc.url=jdbc:mysql://123.254.110.17:33306/emaildb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&noAccessToProcedureBodies=true
-jdbc.username=root
-jdbc.password=1q2w3e4r
-#jdbc.password=mysql
-
